@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: monprivate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-state-metrics
+  template:
+    metadata:
+      labels:
+        app: kube-state-metrics
+        grafanak8sapp: 'true'
+    spec:
+      serviceAccountName: kube-state-metrics
+      containers:
+      - name: kube-state-metrics
+        image: bitnami/kube-state-metrics:1.8.0
+        args:
+          - '--collectors=ingresses,jobs,pods,replicasets,services,storageclasses,certificatesigningrequests,horizontalpodautoscalers,limitranges,persistentvolumeclaims,poddisruptionbudgets,verticalpodautoscalers,resourcequotas,statefulsets,daemonsets,deployments,endpoints,persistentvolumes,replicationcontrollers,configmaps,cronjobs,namespaces,nodes,secrets'
+        ports:
+        - containerPort: 8080
